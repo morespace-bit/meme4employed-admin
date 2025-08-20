@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-
+import { useRouter } from "next/navigation";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "@/lib/firebase/firebase_config";
 
@@ -12,6 +12,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,8 +33,7 @@ export default function Login() {
         password
       );
 
-      console.log("Logged in:", userCredential.user);
-
+      router.replace("/home");
       setLoading(false);
     } catch (err: any) {
       setLoading(false);
