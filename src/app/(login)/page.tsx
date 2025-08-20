@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import { FcGoogle } from "react-icons/fc";
+
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from "@/lib/firebase/firebase_config";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -23,16 +25,31 @@ export default function Login() {
     try {
       setLoading(true);
 
-      // Fake login delay
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      // Firebase login with email/password
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
 
-      console.log("Login with:", { email, password });
-      // TODO: Replace with API call to your backend
+      console.log("Logged in:", userCredential.user);
 
       setLoading(false);
-    } catch (err) {
+    } catch (err: any) {
       setLoading(false);
-      setError("Something went wrong. Try again.");
+      setError(err.message || "Something went wrong. Try again.");
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      setLoading(true);
+      const result = await signInWithPopup(auth, googleProvider);
+      console.log("Google login success:", result.user);
+      setLoading(false);
+    } catch (err: any) {
+      setLoading(false);
+      setError(err.message || "Google login failed.");
     }
   };
 
@@ -113,7 +130,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full cursor-pointer rounded-lg bg-red-500 py-2 font-[var(--font-secondaryh)] text-lg text-white transition ${
+            className={`w-full rounded-lg bg-red-500 py-2 font-[var(--font-secondaryh)] text-lg text-white transition ${
               loading ? "opacity-60" : "hover:bg-red-600"
             }`}
           >
@@ -122,25 +139,25 @@ export default function Login() {
         </form>
 
         {/* OR Divider */}
-        <div className="my-6 flex items-center">
+        {/* <div className="my-6 flex items-center">
           <div className="h-px flex-1 bg-gray-600"></div>
           <span className="mx-4 text-gray-400">OR</span>
           <div className="h-px flex-1 bg-gray-600"></div>
-        </div>
+        </div> */}
 
         {/* Google Login */}
-        <button
+        {/* <button
           type="button"
-          onClick={() => console.log("Google Login")}
-          className="flex w-full items-center justify-center gap-3 rounded-lg border border-gray-600 bg-black py-2 text-white transition hover:bg-[#111] cursor-pointer"
-        >
-          <FcGoogle className="text-2xl" />
+          onClick={handleGoogleLogin}
+          className="flex w-full items-center justify-center gap-3 rounded-lg border border-gray-600 bg-black py-2 text-white transition hover:bg-[#111]"
+        > */}
+        {/* Lucide Chrome */}
+        {/* <FaGoogle /> */}
+        {/* 
           <span className="font-[var(--font-secondary)]">
             Log In with Google
-          </span>
-        </button>
-
-        {/* Footer */}
+          </span> */}
+        {/* </button> */}
       </div>
     </div>
   );
