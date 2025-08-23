@@ -13,9 +13,10 @@
   --font-cursive: "Edu NSW ACT Cursive", sans-serif;
 
   /* Colors */
-  --color-primary: #0d0d0d;
-  --color-secondary: #f2cb05;
-  --color-text: #f2ebc4;
+  --color-primary: #0d0126;
+  --color-secondary: #340773;
+  --color-third: #9373d9;
+  --color-text: #9373d9;
 }
 
 .char {
