@@ -19,8 +19,10 @@ const MemesPage = () => {
     }
   }, [loading]);
   return (
-    <div className="max-w-4xl mx-auto p-4 flex flex-col gap-6">
-      <h1 className="text-2xl font-bold text-center">Welcome Admin</h1>
+    <div className="max-w-4xl mx-auto p-4 flex flex-col">
+      <h1 className="text-2xl font-bold text-center mt-8 font-secondary text-white">
+        Welcome Admin
+      </h1>
       <AdminControls />
 
       <MemeList />

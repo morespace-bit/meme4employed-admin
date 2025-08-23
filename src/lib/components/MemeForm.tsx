@@ -1,6 +1,13 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { db } from "../firebase/firebase_config";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  updateDoc,
+  setDoc,
+  doc,
+} from "firebase/firestore";
 
 const MemeForm = ({ title, dbTitle }: { title: string; dbTitle: string }) => {
   const [heading, setHeading] = useState("");
@@ -55,9 +62,12 @@ const MemeForm = ({ title, dbTitle }: { title: string; dbTitle: string }) => {
         createdAt: serverTimestamp(),
       };
 
-      if (imageUrl) memeData.imageUrl = imageUrl; // only add if exists
-
-      await addDoc(collection(db, "memes"), memeData);
+      if (imageUrl) memeData.imageUrl = imageUrl;
+      if (dbTitle == "General Memes") {
+        await addDoc(collection(db, dbTitle), memeData);
+      } else {
+        await setDoc(doc(db, dbTitle, "meme"), memeData);
+      }
 
       // Reset form
       setHeading("");
@@ -77,20 +87,23 @@ const MemeForm = ({ title, dbTitle }: { title: string; dbTitle: string }) => {
 
   return (
     <div className="bg-secondary text-white p-7 rounded-2xl">
+      <h1 className="text-3xl flex items-center justify-center mb-3 font-heading ">
+        {title}
+      </h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-5 text-white">
         <input
           type="text"
           placeholder="Heading"
           value={heading}
           onChange={(e) => setHeading(e.target.value)}
-          className="bg-third p-3 rounded-xl font-semibold font-secondary"
+          className="bg-third p-3 rounded-xl font-semibold font-secondary focus:outline-2 outline-amber-300"
           required
         />
 
         <input
           type="file"
           onChange={handleImageChange}
-          className="bg-third p-3 rounded-xl font-semibold font-secondary"
+          className="bg-third p-3 rounded-xl font-semibold font-secondary focus:outline-2 outline-amber-300"
           required
         />
 
@@ -103,14 +116,14 @@ const MemeForm = ({ title, dbTitle }: { title: string; dbTitle: string }) => {
           placeholder="Short Description"
           value={shortDesc}
           onChange={(e) => setShortDesc(e.target.value)}
-          className="bg-third p-3 rounded-xl font-semibold font-secondary"
+          className="bg-third p-3 rounded-xl font-semibold font-secondary focus:outline-2 outline-amber-300"
         />
 
         <textarea
           placeholder="Long Description"
           value={longDesc}
           onChange={(e) => setLongDesc(e.target.value)}
-          className="bg-third p-3 rounded-xl font-semibold font-secondary"
+          className="bg-third p-3 rounded-xl font-semibold font-secondary focus:outline-2 outline-amber-300"
         />
 
         <input
@@ -118,7 +131,7 @@ const MemeForm = ({ title, dbTitle }: { title: string; dbTitle: string }) => {
           placeholder="Video Link"
           value={videoLink}
           onChange={(e) => setVideoLink(e.target.value)}
-          className="bg-third p-3 rounded-xl font-semibold font-secondary"
+          className="bg-third p-3 rounded-xl font-semibold font-secondary focus:outline-2 outline-amber-300"
         />
 
         <button
